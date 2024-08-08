@@ -7,9 +7,9 @@ const Header = () => {
 
     return (
         <div className="navbar bg-base-100 py-4 px-3 md:px-6 lg:px-10 xl:px-12">
-            <div className="navbar-start">
-                <a className="btn btn-ghost text-xl">ClearLens</a>
-            </div>
+            <NavLink to='/' className="navbar-start">
+                <img src='/logo.png' alt='logo' className='w-32 h-16 lg:w-36 lg:h-16'/>
+            </NavLink>
             <div className="navbar-center hidden lg:flex">
                 <label className="input input-bordered flex items-center gap-2 w-96">
                     <input type="text" className="grow" placeholder="Search"/>
@@ -18,18 +18,18 @@ const Header = () => {
             </div>
             <div className="navbar-end">
                 <NavLink to='/products' className='btn btn-sm btn-primary hidden lg:flex'>Explore</NavLink>
-                <div className="btn btn-ghost btn-circle">
+                <NavLink to='/wishlist' className="btn btn-ghost btn-circle">
                     <div className="indicator">
                         <BiHeart size={22}/>
                         <span className="badge badge-sm badge-secondary indicator-item">8</span>
                     </div>
-                </div>
-                <div className="btn btn-ghost btn-circle">
+                </NavLink>
+                <NavLink to='/cart' className="btn btn-ghost btn-circle">
                     <div className="indicator">
                         <IoCartOutline size={24}/>
                         <span className="badge badge-sm badge-secondary indicator-item">2</span>
                     </div>
-                </div>
+                </NavLink>
                 <div className="dropdown dropdown-end ml-2">
                     <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                         <div className="w-10 rounded-full">
