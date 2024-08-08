@@ -11,7 +11,7 @@ const Products = () => {
             />
             <section>
                 <h2 className='text-3xl mt-8'>Glasses for you!</h2>
-                <div className='flex flex-wrap my-8'>
+                <div className='flex flex-wrap justify-center my-8'>
                     <ProductCard/>
                     <ProductCard/>
                     <ProductCard/>
