@@ -23,7 +23,7 @@ const saveProduct = async (req: Request, res: Response, next: NextFunction) => {
         });
 
         await product.save();
-        res.status(201).send('Product saved');
+        return res.status(201).json({ message: 'Product saved' });
     } catch (error: any) {
         next(error);
     }

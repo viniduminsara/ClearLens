@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import errorHandler from './util/errorHandler';
 import productRoutes from "./routes/ProductRoutes";
+import userRoutes from "./routes/UserRoutes";
 
 const mongoose = require('mongoose');
 const app:Application = express();
@@ -17,6 +18,7 @@ db.once('open', () => console.log('Database connected :)'));
 db.on('error', console.error.bind(console, 'Database connection error :('));
 
 //routes
+app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/products', productRoutes);
 
 //error handler
