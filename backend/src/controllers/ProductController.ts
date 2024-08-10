@@ -48,6 +48,7 @@ const getProductById = async (req: Request, res: Response, next: NextFunction) =
     }
 
     try {
+        //@ts-ignore
         const product = await ProductModel.findById(id);
 
         if (!product) {
