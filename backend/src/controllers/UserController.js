@@ -47,11 +47,12 @@ module.exports.signIn = async (req, res, next) => {
 }
 
 module.exports.getById = async (req, res, next) => {
-    const user = await UserModel.findOne({email: req.user.email})
+    const user = await UserModel.findOne({ email: req.user.email })
         .select('-password')
-        .populate({
-            path: 'cart'
-        });
+        .populate([
+            { path: 'cart' },
+            { path: 'wishlist' }
+        ]);
 
     if (user) {
         return res.status(200).json({user: user});
