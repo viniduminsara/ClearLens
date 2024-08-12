@@ -1,11 +1,7 @@
-import {User} from "../types/User";
-
 const jwt = require('jsonwebtoken');
-import {NextFunction, Request, Response} from 'express';
-import {IUserModel} from "../models/UserModel";
 const dotenv = require('dotenv').config();
 
-export const generateToken = (user: any) => {
+module.exports.generateToken = (user) => {
     const payload = {
         id: user._id,
         email: user.email,
@@ -13,7 +9,7 @@ export const generateToken = (user: any) => {
     return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
 }
 
-export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
+module.exports.authenticateToken = (req, res, next) => {
     const authHeader = req.header('Authorization');
     if (!authHeader){
         return res.status(401).json({ message: 'Unauthorized: Missing token'});
@@ -23,12 +19,11 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
         return res.status(401).json({ message: 'Unauthorized: Invalid token format' });
     }
 
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err: any, user:IUserModel) => {
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
         if (err){
             return res.status(403).json({ message: 'Forbidden: Invalid token' });
         }
 
-        //@ts-ignore
         req.user = user;
         next();
     })
