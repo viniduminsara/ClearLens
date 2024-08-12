@@ -2,40 +2,120 @@ import StyledInput from "../components/StyledInput.tsx";
 import {IoIosMail, IoMdPerson} from "react-icons/io";
 import {FaKey} from "react-icons/fa";
 import {useState} from "react";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import {useApp} from "../context/AppContext.tsx";
+import axios from "axios";
 
 const SignUp = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+    const [usernameError, setUsernameError] = useState('');
+    const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+
+    const {login} = useApp();
+    const navigate = useNavigate();
+
+    const handleSignUp = async () => {
+        if (username && email && password && !usernameError && !emailError && !passwordError){
+            try {
+                const response = await axios.post('http://localhost:3000/api/v1/users/signup', {
+                    username: username,
+                    email: email,
+                    password: password
+                });
+
+                if (response.status === 201) {
+                    login(response.data.token)
+                    navigate('/');
+                    console.log(response.data);
+                }
+            } catch (error) {
+                console.error('Error while signing', error.message);
+            }
+        }else {
+            console.error('Please enter valid data.');
+        }
+    }
+
     return (
         <div className="bg-base-200 min-h-screen flex">
             <div className="flex-1">
                 <div className='w-full h-full flex justify-center items-center'>
-                    <form className='w-full mx-16 md:mx-32'>
+                    <div className='w-full mx-16 md:mx-32'>
                         <div className='w-full flex justify-center items-center'>
                             <img src='/logo.png' className='w-48' alt='logo'/>
                         </div>
                         <div className='w-full flex justify-center items-center mb-8'>
-                            <h3 className='text-xl'>Sign up to your account</h3>
+                            <h3 className='text-xl'>Sign up with ClearLens</h3>
                         </div>
-                        <StyledInput icon={<IoMdPerson/>} placeholder='username' value={username} type='text'
-                                     changeHandler={(e) => setUsername(e.target.value)}/>
-                        <StyledInput icon={<IoIosMail/>} placeholder='email' value={email} type='text'
-                                     changeHandler={(e) => setEmail(e.target.value)}/>
-                        <StyledInput icon={<FaKey/>} placeholder='password' value={password} type='password'
-                                     changeHandler={(e) => setPassword(e.target.value)}/>
-                        <button className='btn btn-primary w-full mb-2'>Sign in</button>
+                        <div className='mb-4'>
+                            <StyledInput icon={<IoMdPerson/>} placeholder='username' value={username} type='text'
+                                         changeHandler={(e) => setUsername(e.target.value)}
+                                         blurHandler={() => {
+                                             if (username.length < 6) {
+                                                 setUsernameError("Username cannot be shorter than 6 characters");
+                                             } else {
+                                                 setUsernameError("");
+                                             }
+                                         }}
+                            />
+                            {usernameError &&
+                                <div className='text-error'>
+                                    {usernameError}
+                                </div>
+                            }
+                        </div>
+                        <div className='mb-4'>
+                            <StyledInput icon={<IoIosMail/>} placeholder='email' value={email} type='text'
+                                         changeHandler={(e) => setEmail(e.target.value)}
+                                         blurHandler={() => {
+                                             const regex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+
+                                             if (email.length === 0) {
+                                                 setEmailError("Email address cannot be blank");
+                                             } else if (!regex.test(email)) {
+                                                 setEmailError("Please enter a valid email address");
+                                             } else {
+                                                 setEmailError("");
+                                             }
+                                         }}
+                            />
+                            {emailError &&
+                                <div className="text-error">
+                                    {emailError}
+                                </div>
+                            }
+                        </div>
+                        <div className='mb-4'>
+                            <StyledInput icon={<FaKey/>} placeholder='password' value={password} type='password'
+                                         changeHandler={(e) => setPassword(e.target.value)}
+                                         blurHandler={() => {
+                                             if (password.length < 8) {
+                                                 setPasswordError("Password cannot be shorter than 8 characters");
+                                             } else {
+                                                 setPasswordError("");
+                                             }
+                                         }}
+                            />
+                            {passwordError &&
+                                <div className='text-error'>
+                                    {passwordError}
+                                </div>
+                            }
+                        </div>
+                        <button className='btn btn-primary w-full mb-2' onClick={handleSignUp}>Signup</button>
                         <h5>Already have an account? <Link to='/signin' className='link link-primary'>SignIn</Link></h5>
-                    </form>
+                    </div>
                 </div>
             </div>
             <div className="flex-1 hidden md:flex">
                 <div
                     className="hero"
                     style={{
-                        backgroundImage: "url('/public/prescription_glasses.jpg')",
+                        backgroundImage: "url('/prescription_glasses.jpg')",
                     }}>
                     <div className="hero-overlay bg-opacity-60"></div>
                     <div className="hero-content text-neutral-content text-center">

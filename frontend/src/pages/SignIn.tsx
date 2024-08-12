@@ -2,11 +2,40 @@ import StyledInput from "../components/StyledInput.tsx";
 import {IoMdPerson} from "react-icons/io";
 import {useState} from "react";
 import {FaKey} from "react-icons/fa";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import axios from "axios";
+import {useApp} from "../context/AppContext.tsx";
 
 const SignIn = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+
+    const [usernameError, setUsernameError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+
+    const {login} = useApp();
+    const navigate = useNavigate();
+
+    const handleSignIn = async () => {
+        if (username && password && !usernameError && !passwordError){
+            try {
+                const response = await axios.post('http://localhost:3000/api/v1/users/signIn', {
+                    username: username,
+                    password: password
+                });
+
+                if (response.status === 200) {
+                    login(response.data.token)
+                    navigate('/');
+                    console.log(response.data);
+                }
+            } catch (error) {
+                console.error('Error while signing', error.message);
+            }
+        }else {
+            console.error('Please enter valid data.');
+        }
+    }
 
     return (
         <div className="bg-base-200 min-h-screen flex">
@@ -14,7 +43,7 @@ const SignIn = () => {
                 <div
                     className="hero"
                     style={{
-                        backgroundImage: "url('/public/prescription_glasses.jpg')",
+                        backgroundImage: "url('/prescription_glasses.jpg')",
                     }}>
                     <div className="hero-overlay bg-opacity-60"></div>
                     <div className="hero-content text-neutral-content text-center">
@@ -31,20 +60,50 @@ const SignIn = () => {
             </div>
             <div className="flex-1">
                 <div className='w-full h-full flex justify-center items-center'>
-                    <form className='w-full mx-32'>
+                    <div className='w-full mx-16 md:mx-32'>
                         <div className='w-full flex justify-center items-center'>
                             <img src='/logo.png' className='w-48' alt='logo'/>
                         </div>
                         <div className='w-full flex justify-center items-center mb-8'>
                             <h3 className='text-xl'>Sign in to your account</h3>
                         </div>
-                        <StyledInput icon={<IoMdPerson/>} placeholder='username' value={username} type='text'
-                                     changeHandler={(e) => setUsername(e.target.value)}/>
-                        <StyledInput icon={<FaKey/>} placeholder='password' value={password} type='password'
-                                     changeHandler={(e) => setPassword(e.target.value)}/>
-                        <button className='btn btn-primary w-full mb-2'>Sign in</button>
+                        <div className='mb-4'>
+                            <StyledInput icon={<IoMdPerson/>} placeholder='username' value={username} type='text'
+                                         changeHandler={(e) => setUsername(e.target.value)}
+                                         blurHandler={() => {
+                                             if (username.length < 6) {
+                                                 setUsernameError("Username cannot be shorter than 6 characters");
+                                             } else {
+                                                 setUsernameError("");
+                                             }
+                                         }}
+                            />
+                            {usernameError &&
+                                <div className='text-error'>
+                                    {usernameError}
+                                </div>
+                            }
+                        </div>
+                        <div className='mb-4'>
+                            <StyledInput icon={<FaKey/>} placeholder='password' value={password} type='password'
+                                         changeHandler={(e) => setPassword(e.target.value)}
+                                         blurHandler={() => {
+                                             if (password.length < 8) {
+                                                 setPasswordError("Password cannot be shorter than 8 characters");
+                                             } else {
+                                                 setPasswordError("");
+                                             }
+                                         }}
+                            />
+                            {passwordError &&
+                                <div className='text-error'>
+                                    {passwordError}
+                                </div>
+                            }
+                        </div>
+                        <button className='btn btn-primary w-full mb-2' onClick={handleSignIn}>Sign in</button>
                         <h5>Still haven't account? <Link to='/signup' className='link link-primary'>Signup</Link></h5>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
