@@ -1,8 +1,7 @@
-import {NextFunction, Request, Response} from 'express';
-import mongoose from "mongoose";
-import ProductModel from "../models/ProductModel";
+const mongoose = require('mongoose');
+const ProductModel = require('../models/ProductModel');
 
-const saveProduct = async (req: Request, res: Response, next: NextFunction) => {
+module.exports.saveProduct = async (req, res, next) => {
     try {
         const {qty, name, description, brand, category, gender, weight, quantity, image, rating, price, newPrice, trending} = req.body;
 
@@ -24,22 +23,21 @@ const saveProduct = async (req: Request, res: Response, next: NextFunction) => {
 
         await product.save();
         return res.status(201).json({ message: 'Product saved' });
-    } catch (error: any) {
+    } catch (error) {
         next(error);
     }
 }
 
-const getProducts = async (req: Request, res: Response, next: NextFunction) => {
+module.exports.getProducts = async (req, res, next) => {
     try {
-        //@ts-ignore
         const products = await ProductModel.find();
         return res.json(products);
-    } catch (error: any) {
+    } catch (error) {
         next(error);
     }
 }
 
-const getProductById = async (req: Request, res: Response, next: NextFunction) => {
+module.exports.getProductById = async (req, res, next) => {
     const { id } = req.params;
 
     // Validate ObjectId
@@ -48,7 +46,6 @@ const getProductById = async (req: Request, res: Response, next: NextFunction) =
     }
 
     try {
-        //@ts-ignore
         const product = await ProductModel.findById(id);
 
         if (!product) {
@@ -56,15 +53,7 @@ const getProductById = async (req: Request, res: Response, next: NextFunction) =
         }
 
         return res.json(product);
-    } catch (error: any) {
+    } catch (error) {
         next(error);
     }
 };
-
-const productController = {
-    get: getProducts,
-    save: saveProduct,
-    getById: getProductById,
-}
-
-export default productController;

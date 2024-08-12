@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const ProductSchema = new mongoose.Schema({
     qty: { type: Number, required: true },
@@ -16,8 +16,6 @@ const ProductSchema = new mongoose.Schema({
     trending: { type: Boolean, required: true },
 });
 
-const ProductModel = mongoose.model('Product', ProductSchema);
-
-export default ProductModel;
+module.exports = mongoose.model('Product', ProductSchema);
 
 
