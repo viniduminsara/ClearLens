@@ -14,8 +14,10 @@ router.route('/signIn')
 
 router.route('/cart/:id')
     .post(authenticateToken, userController.addCartItem)
+    .delete(authenticateToken, userController.deleteCartItem)
 
 router.route('/wishlist/:id')
     .post(authenticateToken, userController.addWishlistItem)
+    .delete(authenticateToken, userController.deleteWishItem)
 
 module.exports = router;

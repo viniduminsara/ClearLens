@@ -4,7 +4,9 @@ import {FaKey} from "react-icons/fa";
 import {useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {useApp} from "../context/AppContext.tsx";
-import axios from "axios";
+import {useToast} from "../context/ToastContext.tsx";
+import {signupService} from "../api/apiServices.ts";
+
 
 const SignUp = () => {
     const [username, setUsername] = useState('');
@@ -16,29 +18,32 @@ const SignUp = () => {
     const [passwordError, setPasswordError] = useState('');
 
     const {login} = useApp();
+    const {showToast} = useToast();
     const navigate = useNavigate();
 
     const handleSignUp = async () => {
-        if (username && email && password && !usernameError && !emailError && !passwordError){
+        if (username && email && password && !usernameError && !emailError && !passwordError) {
             try {
-                const response = await axios.post('http://localhost:3000/api/v1/users/signup', {
-                    username: username,
-                    email: email,
-                    password: password
-                });
-
-                if (response.status === 201) {
-                    login(response.data.token)
+                const response = await signupService(username, email, password);
+                if (response.ok) {
+                    const data = await response.json();
+                    login(data.token);
                     navigate('/');
-                    console.log(response.data);
+                    console.log(data);
+                } else if (response.status === 409) {
+                    const errorData = await response.json();
+                    showToast({ type: 'warning', message: errorData.message });
+                } else {
+                    console.error('Error while signing', response.statusText);
                 }
             } catch (error) {
                 console.error('Error while signing', error.message);
             }
-        }else {
-            console.error('Please enter valid data.');
+        } else {
+            showToast({ type: 'error', message: 'Please enter valid data.' });
         }
     }
+
 
     return (
         <div className="bg-base-200 min-h-screen flex">

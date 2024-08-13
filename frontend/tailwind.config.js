@@ -10,6 +10,24 @@ export default {
   plugins: [
     require('daisyui'),
   ],
-  safelist: [],
+  safelist: [
+    'badge',
+    'badge-success',
+    'badge-warning',
+    'badge-error',
+    'badge-sm',
+    'alert',
+    'alert-success',
+    'alert-warning',
+    'alert-error',
+    'text-success',
+    'text-warning',
+    'text-error',
+    'text-info',
+    'text-success',
+    'gap-3',
+    'mask',
+    'mask-squircle'
+  ]
 }
 

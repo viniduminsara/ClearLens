@@ -62,20 +62,55 @@ module.exports.getById = async (req, res, next) => {
 }
 
 module.exports.addCartItem = async (req, res, next) => {
-    const {id} = req.params;
+    const { id } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(400).json({message: 'Invalid product ID'});
+        return res.status(400).json({ message: 'Invalid product ID' });
     }
 
-    const user = await UserModel.findOne({email: req.user.email}).select('-password');
+    const user = await UserModel.findOne({ email: req.user.email }).select('-password');
     const product = await ProductModel.findById(id);
-    if (product) {
-        user.cart.push(product);
-        await user.save();
-        return res.status(200).json({message: 'Cart item added'});
+
+    if (!product) {
+        return res.status(404).json({ message: 'Product not found' });
     }
-    return res.status(404).json({message: 'Product not found'});
+
+    const isProductInCart = user.cart.some((cartItem) => cartItem.toString() === product._id.toString());
+
+    if (isProductInCart) {
+        return res.status(409).json({ message: 'Product is already in cart' });
+    }
+
+    user.cart.push(product);
+    await user.save();
+    return res.status(200).json({ message: 'Cart item added' });
+}
+
+module.exports.deleteCartItem = async (req, res, next) => {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ message: 'Invalid product ID' });
+    }
+
+    const user = await UserModel.findOne({ email: req.user.email }).select('-password');
+    const product = await ProductModel.findById(id);
+
+    if (!product) {
+        return res.status(404).json({ message: 'Product not found' });
+    }
+
+    // Check if the product is in the user's cart
+    const isProductInCart = user.cart.some((cartItem) => cartItem.toString() === product._id.toString());
+
+    if (!isProductInCart) {
+        return res.status(404).json({ message: 'Product is not in cart' });
+    }
+
+    // Remove the product from the cart
+    user.cart = user.cart.filter((cartItem) => cartItem.toString() !== product._id.toString());
+    await user.save();
+    return res.status(200).json({ message: 'Cart item deleted' });
 }
 
 module.exports.addWishlistItem = async (req, res, next) => {
@@ -87,10 +122,45 @@ module.exports.addWishlistItem = async (req, res, next) => {
 
     const user = await UserModel.findOne({email: req.user.email}).select('-password');
     const product = await ProductModel.findById(id);
-    if (product) {
-        user.wishlist.push(product);
-        await user.save();
-        return res.status(200).json({message: 'Wishlist item added'});
+
+    if (!product) {
+        return res.status(404).json({message: 'Product not found'});
     }
-    return res.status(404).json({message: 'Product not found'});
+
+    const isProductInWishlist = user.wishlist.some((wishlistItem) => wishlistItem.toString() === product._id.toString());
+
+    if (isProductInWishlist) {
+        return res.status(409).json({ message: 'Product is already in wishlist' });
+    }
+
+    user.wishlist.push(product);
+    await user.save();
+    return res.status(200).json({message: 'Wishlist item added'});
+}
+
+module.exports.deleteWishItem = async (req, res, next) => {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ message: 'Invalid product ID' });
+    }
+
+    const user = await UserModel.findOne({ email: req.user.email }).select('-password');
+    const product = await ProductModel.findById(id);
+
+    if (!product) {
+        return res.status(404).json({ message: 'Product not found' });
+    }
+
+    // Check if the product is in the user's cart
+    const isProductInWishlist= user.wishlist.some((cartItem) => cartItem.toString() === product._id.toString());
+
+    if (!isProductInWishlist) {
+        return res.status(404).json({ message: 'Product is not in cart' });
+    }
+
+    // Remove the product from the cart
+    user.wishlist = user.wishlist.filter((cartItem) => cartItem.toString() !== product._id.toString());
+    await user.save();
+    return res.status(200).json({ message: 'Wishlist item deleted' });
 }

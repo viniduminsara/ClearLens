@@ -5,7 +5,7 @@ import {NavLink} from "react-router-dom";
 import {useApp} from "../context/AppContext.tsx";
 
 const Header = () => {
-    const {isAuthenticated, user} = useApp();
+    const {isAuthenticated, user, logout} = useApp();
 
     return (
         <div className="navbar bg-base-100 py-4 px-3 md:px-6 lg:px-10 xl:px-12">
@@ -56,7 +56,7 @@ const Header = () => {
                                     </a>
                                 </li>
                                 <li><a>Settings</a></li>
-                                <li><a>Logout</a></li>
+                                <li onClick={logout}><a>Logout</a></li>
                             </ul>
                         </div>
                     </>

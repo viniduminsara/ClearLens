@@ -3,8 +3,9 @@ import {IoMdPerson} from "react-icons/io";
 import {useState} from "react";
 import {FaKey} from "react-icons/fa";
 import {Link, useNavigate} from "react-router-dom";
-import axios from "axios";
 import {useApp} from "../context/AppContext.tsx";
+import {useToast} from "../context/ToastContext.tsx";
+import {signinService} from "../api/apiServices.ts";
 
 const SignIn = () => {
     const [username, setUsername] = useState('');
@@ -14,26 +15,30 @@ const SignIn = () => {
     const [passwordError, setPasswordError] = useState('');
 
     const {login} = useApp();
+    const {showToast} = useToast();
     const navigate = useNavigate();
 
     const handleSignIn = async () => {
-        if (username && password && !usernameError && !passwordError){
+        if (username && password && !usernameError && !passwordError) {
             try {
-                const response = await axios.post('http://localhost:3000/api/v1/users/signIn', {
-                    username: username,
-                    password: password
-                });
+                const response = await signinService(username, password);
 
-                if (response.status === 200) {
-                    login(response.data.token)
+                if (response.ok) {
+                    const data = await response.json();
+                    login(data.token);
                     navigate('/');
-                    console.log(response.data);
+                    console.log(data);
+                } else if (response.status === 404 || response.status === 401) {
+                    const errorData = await response.json();
+                    showToast({ type: 'error', message: errorData.message });
+                } else {
+                    console.error('Error while signing', response.statusText);
                 }
             } catch (error) {
                 console.error('Error while signing', error.message);
             }
-        }else {
-            console.error('Please enter valid data.');
+        } else {
+            showToast({ type: 'error', message: 'Please enter valid data.' });
         }
     }
 

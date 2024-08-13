@@ -1,12 +1,16 @@
-const PriceCard = () => {
+interface PriceCardProps{
+    data: Product;
+}
+
+const PriceCard = ({ data }: PriceCardProps) => {
 
     return (
         <div className='flex justify-between'>
             <div className='text-gray-600 flex-1'>
-                Hyperclax Active (1)item
+                {data.name}
             </div>
             <div className='text-gray-600 text-lg'>
-                Rs. 5000
+                Rs. {data.newPrice}
             </div>
         </div>
     )

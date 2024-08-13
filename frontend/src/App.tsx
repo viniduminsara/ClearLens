@@ -8,25 +8,30 @@ import Cart from "./pages/Cart.tsx";
 import {AppContextProvider} from "./context/AppContext.tsx";
 import SignIn from "./pages/SignIn.tsx";
 import SignUp from "./pages/SignUp.tsx";
+import {ToastProvider} from "./context/ToastContext.tsx";
+import ToastContainer from "./components/ToastContainer.tsx";
 
 function App() {
 
     return (
-        <AppContextProvider>
-            <BrowserRouter>
-                <Routes>
-                    <Route element={<Layout/>}>
-                        <Route path='/' element={<Home/>}/>
-                        <Route path='/signin' element={<SignIn/>}/>
-                        <Route path='/signup' element={<SignUp/>}/>
-                        <Route path='/products' element={<Products/>}/>
-                        <Route path='/product/id' element={<ProductDetails/>}/>
-                        <Route path='/wishlist' element={<Wishlist/>}/>
-                        <Route path='/cart' element={<Cart/>}/>
-                    </Route>
-                </Routes>
-            </BrowserRouter>
-        </AppContextProvider>
+        <ToastProvider>
+            <AppContextProvider>
+                <BrowserRouter>
+                    <Routes>
+                        <Route element={<Layout/>}>
+                            <Route path='/' element={<Home/>}/>
+                            <Route path='/signin' element={<SignIn/>}/>
+                            <Route path='/signup' element={<SignUp/>}/>
+                            <Route path='/products' element={<Products/>}/>
+                            <Route path='/product/:productId' element={<ProductDetails/>}/>
+                            <Route path='/wishlist' element={<Wishlist/>}/>
+                            <Route path='/cart' element={<Cart/>}/>
+                        </Route>
+                    </Routes>
+                </BrowserRouter>
+                <ToastContainer/>
+            </AppContextProvider>
+        </ToastProvider>
     )
 }
 
