@@ -7,6 +7,9 @@ router.route('/')
     .get(productController.getProducts)
     .post(productController.saveProduct)
 
+router.route('/trending')
+    .get(productController.getTrendingProducts)
+
 router.route('/:id')
     .get(productController.getProductById)
 

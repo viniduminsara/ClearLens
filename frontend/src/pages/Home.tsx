@@ -2,8 +2,31 @@ import TrendingCard from "../components/TrendingCard.tsx";
 import CategoryCard from "../components/CategoryCard.tsx";
 import {BsSunglasses} from "react-icons/bs";
 import {Link} from "react-router-dom";
+import {useEffect, useState} from "react";
+import {trendingService} from "../api/apiServices.ts";
+import {useToast} from "../context/ToastContext.tsx";
 
 const Home = () => {
+    const [products, setProducts] = useState<Product[]>([]);
+    const {showToast} = useToast();
+
+    useEffect(() => {
+        const getTrendingProducts = async () => {
+            try {
+                const response = await trendingService();
+                if (response.ok){
+                    const data = await response.json();
+                    setProducts(data);
+                }
+
+            } catch (error) {
+                if (error.response) {
+                    showToast({type: 'error', message: error.response.data.message});
+                }
+            }
+        }
+        getTrendingProducts();
+    }, []);
 
     return (
         <div className='px-6 md:px-24'>
@@ -31,14 +54,9 @@ const Home = () => {
             <section className='mb-8'>
                 <h2 className='text-2xl font-bold'>Trending Products</h2>
                 <div className='flex flex-wrap'>
-                    <TrendingCard/>
-                    <TrendingCard/>
-                    <TrendingCard/>
-                    <TrendingCard/>
-                    <TrendingCard/>
-                    <TrendingCard/>
-                    <TrendingCard/>
-                    <TrendingCard/>
+                    {products.map((product, index) => (
+                        <TrendingCard key={index} data={product} />
+                    ))}
                 </div>
             </section>
             <section>

@@ -1,4 +1,4 @@
-import {CART_URL, PRODUCTS_URL, SIGNIN_URL, SIGNUP_URL, USER_URL, WISHLIST_URL} from "./apiUrls.ts";
+import {CART_URL, PRODUCTS_URL, SIGNIN_URL, SIGNUP_URL, TRENDING_URL, USER_URL, WISHLIST_URL} from "./apiUrls.ts";
 
 export const signupService = async (username: string, email: string, password: string) => {
     return await fetch(SIGNUP_URL, {
@@ -44,6 +44,12 @@ export const productsService = async () => {
 
 export const productDetailsService = async (productId: string | undefined) => {
     return await fetch(`${PRODUCTS_URL}/${productId}`, {
+        method: 'GET',
+    });
+}
+
+export const trendingService = async () => {
+    return await fetch(TRENDING_URL, {
         method: 'GET',
     });
 }

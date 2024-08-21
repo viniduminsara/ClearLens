@@ -57,3 +57,12 @@ module.exports.getProductById = async (req, res, next) => {
         next(error);
     }
 };
+
+module.exports.getTrendingProducts = async (req, res, next) => {
+    try {
+        const products = await ProductModel.find({ trending: true }).limit(4);
+        return res.json(products);
+    } catch (error) {
+        next(error);
+    }
+}
