@@ -21,7 +21,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
 
     return (
         <div className="card card-compact bg-base-100 w-96 shadow-xl mb-6 lg:m-4 transition-transform hover:scale-[1.02] hover:shadow-lg">
-            <Link to={`/product/${data._id}`}
+            <Link to={`/product/${data.name.toLowerCase().replace(/\s+/g, '-')}&${data._id}`}
                 className='flex items-center justify-center py-4 bg-black/[0.075] rounded-t-2xl xs:w-1/2 w-full sm:w-full'>
                 <figure>
                     <img
@@ -32,7 +32,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
                 </figure>
             </Link>
             <div className="card-body">
-                <Link to={`/product/${data._id}`} className=" flex justify-between">
+                <Link to={`/product/${data.name.toLowerCase().replace(/\s+/g, '-')}&${data._id}`} className=" flex justify-between">
                     <div className="flex flex-col">
                         <span className="text-xl font-medium mb-2">{data.name}</span>
                         <span className="flex items-center gap-1.5">
