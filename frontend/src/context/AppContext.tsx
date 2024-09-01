@@ -64,6 +64,7 @@ export const AppContextProvider: React.FC<AppProviderProps> = ({children}) => {
         setToken(jwtToken);
         await getUserDetails(jwtToken);
         localStorage.setItem("token", jwtToken);
+        setIsAuthenticated(true);
     }
 
     const logout = () => {

@@ -10,6 +10,7 @@ import SignIn from "./pages/SignIn.tsx";
 import SignUp from "./pages/SignUp.tsx";
 import {ToastProvider} from "./context/ToastContext.tsx";
 import ToastContainer from "./components/ToastContainer.tsx";
+import ProtectedRoutes from "./utils/ProtectedRoutes.tsx";
 
 function App() {
 
@@ -24,8 +25,10 @@ function App() {
                             <Route path='/signup' element={<SignUp/>}/>
                             <Route path='/products' element={<Products/>}/>
                             <Route path='/product/:productId' element={<ProductDetails/>}/>
-                            <Route path='/wishlist' element={<Wishlist/>}/>
-                            <Route path='/cart' element={<Cart/>}/>
+                            <Route element={<ProtectedRoutes/>}>
+                                <Route path='/wishlist' element={<Wishlist/>}/>
+                                <Route path='/cart' element={<Cart/>}/>
+                            </Route>
                         </Route>
                     </Routes>
                 </BrowserRouter>
