@@ -3,6 +3,7 @@ import {BiHeart} from "react-icons/bi";
 import {FaHeart, FaRegTrashAlt} from "react-icons/fa";
 import {useApp} from "../../context/AppContext.tsx";
 import {useEffect, useState} from "react";
+import {Link} from "react-router-dom";
 
 interface CartItemCardProps{
     data: Product;
@@ -22,16 +23,20 @@ const CartItemCard = ({ data }: CartItemCardProps) => {
         <div className='w-full p-6 shadow-xl rounded-3xl mb-4'>
             <div className='flex justify-between'>
                 <div className='flex gap-x-6'>
-                    <div className='bg-black/[0.075] rounded-md flex items-center h-16 w-16 md:h-28 md:w-28'>
+                    <Link to={`/product/${data.name.toLowerCase().replace(/\s+/g, '-')}&${data._id}`} className='bg-black/[0.075] rounded-md flex items-center h-16 w-16 md:h-28 md:w-28'>
                         <img src={data.image}
                              alt="image" className='object-fit w-full'/>
-                    </div>
+                    </Link>
                     <div>
                         <h3 className='lg:text-xl py-3 font-semibold'>{data.name}</h3>
                         <div>
                             <span className='text-gray-700 mb-6'>Quantity: </span>
                             <div className='flex my-3'>
-                                <button onClick={() => setQty(prevQty => prevQty - 1)}
+                                <button onClick={() => {
+                                    if (qty > 1) {
+                                        setQty(qty - 1);
+                                    }
+                                }}
                                     className='btn btn-neutral btn-xs disabled:cursor-not-allowed'>
                                     <AiOutlineMinus/>
                                 </button>
@@ -39,7 +44,11 @@ const CartItemCard = ({ data }: CartItemCardProps) => {
                                     className='h-full w-10 bg-black/[0.075]  rounded-sm flex items-center justify-center'>
                                     {qty}
                                 </span>
-                                <button onClick={() => setQty(prevQty => prevQty + 1)}
+                                <button onClick={() => {
+                                    if (qty >= 1) {
+                                        setQty(qty + 1);
+                                    }
+                                }}
                                     className='btn btn-neutral btn-xs rounded-md text-xs disabled:cursor-not-allowed'>
                                     <AiOutlinePlus/>
                                 </button>

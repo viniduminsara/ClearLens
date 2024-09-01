@@ -5,18 +5,21 @@ import {useToast} from "../context/ToastContext.tsx";
 
 const ProtectedRoutes = () => {
     const navigate = useNavigate();
-    const {isAuthenticated} = useApp();
+    const {isAuthenticated, isAuthLoading} = useApp();
     const {showToast} = useToast();
 
     useEffect(() => {
-        if (!isAuthenticated) {
-            showToast({type: 'warning', message: 'Please sign in first!'});
-            navigate('/signin');
+        if (!isAuthLoading) {  // Wait until loading is complete
+            if (!isAuthenticated) {
+                showToast({type: 'warning', message: 'Please sign in first!'});
+                navigate('/signin');
+            }
         }
-    }, [isAuthenticated, navigate, showToast]);
+    }, [isAuthenticated, isAuthLoading, navigate, showToast]);
 
-    return isAuthenticated ? <Outlet/> : null;
+    return !isAuthLoading && isAuthenticated ? <Outlet/> : null;  // Return nothing while loading
 }
 
 export default ProtectedRoutes;
+
 

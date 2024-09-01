@@ -10,6 +10,7 @@ import {
 interface AppContextType {
     user: UserObject | null;
     isAuthenticated: boolean,
+    isAuthLoading: boolean,
     token: string,
     login: (jwtToken: string) => void;
     logout: () => void;
@@ -25,6 +26,7 @@ interface AppContextType {
 const defaultContext: AppContextType = {
     user: null,
     isAuthenticated: false,
+    isAuthLoading: false,
     token: "",
     login: () => {
     },
@@ -55,6 +57,7 @@ interface AppProviderProps {
 
 export const AppContextProvider: React.FC<AppProviderProps> = ({children}) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isAuthLoading, setIsAuthLoading] = useState(true);  // New loading state
     const [token, setToken] = useState("");
     const [user, setUser] = useState<UserObject | null>(null);
     const [cartTotal, setCartTotal] = useState(0);
@@ -62,9 +65,11 @@ export const AppContextProvider: React.FC<AppProviderProps> = ({children}) => {
 
     const login = async (jwtToken: string) => {
         setToken(jwtToken);
+        setIsAuthLoading(true);  // Start loading when logging in
         await getUserDetails(jwtToken);
         localStorage.setItem("token", jwtToken);
         setIsAuthenticated(true);
+        setIsAuthLoading(false);  // End loading after setting user details
     }
 
     const logout = () => {
@@ -73,15 +78,13 @@ export const AppContextProvider: React.FC<AppProviderProps> = ({children}) => {
         setIsAuthenticated(false);
     }
 
-    const getUserDetails = async (jwtToken) => {
+    const getUserDetails = async (jwtToken: string) => {
         try {
             const response = await userDetailsService(jwtToken);
             if (response.ok) {
                 const data = await response.json();
                 setUser(data.user);
                 setIsAuthenticated(true);
-                console.log(data)
-
                 const total = data.user.cart.reduce((acc, item) => acc + item.newPrice, 0);
                 setCartTotal(total);
             }
@@ -91,6 +94,8 @@ export const AppContextProvider: React.FC<AppProviderProps> = ({children}) => {
             }
         } catch (err) {
             return;
+        } finally {
+            setIsAuthLoading(false);  // End loading even if an error occurs
         }
     }
 
@@ -100,6 +105,8 @@ export const AppContextProvider: React.FC<AppProviderProps> = ({children}) => {
         if (token) {
             setToken(token);
             getUserDetails(token);
+        } else {
+            setIsAuthLoading(false);  // End loading if there's no token
         }
     }, []);
 
@@ -196,6 +203,7 @@ export const AppContextProvider: React.FC<AppProviderProps> = ({children}) => {
             value={{
                 user,
                 isAuthenticated,
+                isAuthLoading,  // Expose loading state
                 token,
                 login,
                 logout,
@@ -212,6 +220,7 @@ export const AppContextProvider: React.FC<AppProviderProps> = ({children}) => {
         </AppContext.Provider>
     )
 }
+
 
 export const useApp = (): AppContextType => {
     return useContext(AppContext);
