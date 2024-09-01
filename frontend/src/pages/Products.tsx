@@ -26,11 +26,11 @@ const Products = () => {
     }, []);
 
     return (
-        <div className='px-6 md:px-24'>
+        <div className='px-6 md:px-24 pt-28'>
             <img
                 src='/products_banner.jpg'
                 alt='bannerImg'
-                className='rounded-2xl h-full min-h-[10rem] object-cover my-4'
+                className='rounded-2xl h-full min-h-[10rem] object-cover'
             />
             <section>
                 <h2 className='text-3xl mt-8'>Glasses for you!</h2>

@@ -46,7 +46,7 @@ const SignUp = () => {
 
 
     return (
-        <div className="bg-base-200 min-h-screen flex">
+        <div className="bg-base-200 pt-20 min-h-screen flex">
             <div className="flex-1">
                 <div className='w-full h-full flex justify-center items-center'>
                     <div className='w-full mx-16 md:mx-32'>

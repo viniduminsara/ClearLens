@@ -8,7 +8,7 @@ const Header = () => {
     const {isAuthenticated, user, logout} = useApp();
 
     return (
-        <div className="navbar bg-base-100 py-4 px-3 md:px-6 lg:px-10 xl:px-12">
+        <div className="navbar fixed bg-base-100 z-10 py-4 px-3 md:px-6 lg:px-10 xl:px-12">
             <NavLink to='/' className="navbar-start">
                 <img src='/logo.png' alt='logo' className='w-32 h-16 lg:w-36 lg:h-16'/>
             </NavLink>

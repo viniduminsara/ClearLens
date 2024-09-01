@@ -29,7 +29,7 @@ const Home = () => {
     }, []);
 
     return (
-        <div className='px-6 md:px-24'>
+        <div className='px-6 pt-12 md:px-24'>
             <section className="container py-16 mx-auto">
                 <div className="items-center lg:flex">
                     <div className="w-full lg:w-1/2">

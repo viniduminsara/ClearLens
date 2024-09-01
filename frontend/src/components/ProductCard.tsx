@@ -45,7 +45,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
                     <div className="flex flex-col items-end">
                         <span className="text-xl">Rs. {data.newPrice}</span>
                         <span className="text-lg text-gray-600 line-through">
-                            {data.price}
+                            Rs. {data.price}
                         </span>
                     </div>
                 </Link>
