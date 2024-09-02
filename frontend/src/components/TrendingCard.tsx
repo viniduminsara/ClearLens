@@ -7,7 +7,7 @@ interface TrendingCardProps {
 const TrendingCard = ({ data }: TrendingCardProps) => {
 
     return (
-        <Link to={`/product/${data.name.toLowerCase().replace(/\s+/g, '-')}&${data._id}`} className="card w-full lg:w-72 bg-base-100 m-4 shadow-xl">
+        <Link to={`/product/${data.name.toLowerCase().replace(/\s+/g, '-')}-${data._id}`} className="card w-full lg:w-72 bg-base-100 m-4 shadow-xl">
             <div className="card-body">
                 <div className='flex justify-between items-center'>
                     <div>

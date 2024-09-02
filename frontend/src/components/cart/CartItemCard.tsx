@@ -23,7 +23,7 @@ const CartItemCard = ({ data }: CartItemCardProps) => {
         <div className='w-full p-6 shadow-xl rounded-3xl mb-4'>
             <div className='flex justify-between'>
                 <div className='flex gap-x-6'>
-                    <Link to={`/product/${data.name.toLowerCase().replace(/\s+/g, '-')}&${data._id}`} className='bg-black/[0.075] rounded-md flex items-center h-16 w-16 md:h-28 md:w-28'>
+                    <Link to={`/product/${data.name.toLowerCase().replace(/\s+/g, '-')}-${data._id}`} className='bg-black/[0.075] rounded-md flex items-center h-16 w-16 md:h-28 md:w-28'>
                         <img src={data.image}
                              alt="image" className='object-fit w-full'/>
                     </Link>

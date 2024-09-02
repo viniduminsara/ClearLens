@@ -17,27 +17,19 @@ const ProductDetails = () => {
 
     useEffect(() => {
         if (productId != null) {
-            setIsCartItem(isInCart(productId.split('&')[1]))
-            setIsWishlistItem(isInWishlist(productId.split('&')[1]))
+            setIsCartItem(isInCart(productId.split('-').pop()))
+            setIsWishlistItem(isInWishlist(productId.split('-').pop()))
         }
-    }, [productId, user]);
+    }, [productId, user, isInCart, isInWishlist]);
 
     useEffect(() => {
         const getProducts = async () => {
             try {
                 if (productId) {
-                    // Split the productId by the '#' character and extract the id part
-                    const id = productId.split('&')[1];
-
-                    // Call the service with the extracted id
-                    if (id) {
-                        const response = await productDetailsService(id);
-                        if (response.ok) {
-                            const data = await response.json();
-                            setProductDetails(data);
-                        }
-                    } else {
-                        new Error("Invalid product ID format.");
+                    const response = await productDetailsService(productId.split('-').pop());
+                    if (response.ok) {
+                        const data = await response.json();
+                        setProductDetails(data);
                     }
                 }
 
@@ -50,7 +42,7 @@ const ProductDetails = () => {
             }
         };
         getProducts();
-    }, [productId]);
+    }, [productId, showToast]);
 
 
     return (
@@ -120,7 +112,7 @@ const ProductDetails = () => {
                                 {!isCartItem ?
                                     <div className='btn btn-primary' onClick={() => {
                                         if (productId) {
-                                            addCartItem(productId.split('&')[1]);
+                                            addCartItem(productId.split('-').pop());
                                         }
                                     }}>
                                         <FaShoppingCart/>
@@ -131,7 +123,7 @@ const ProductDetails = () => {
 
                                     <div className='btn btn-primary' onClick={() => {
                                         if (productId) {
-                                            deleteCartItem(productId.split('&')[1]);
+                                            deleteCartItem(productId.split('-').pop());
                                         }
                                     }}>
                                         <MdOutlineRemoveShoppingCart />
@@ -141,7 +133,7 @@ const ProductDetails = () => {
                                 {!isWishlistItem ?
                                     <div className='btn btn-primary' onClick={() => {
                                         if (productId) {
-                                            addWishlistItem(productId.split('&')[1]);
+                                            addWishlistItem(productId.split('-').pop());
                                         }
                                     }}>
                                         <FaHeart/>
@@ -152,7 +144,7 @@ const ProductDetails = () => {
 
                                     <div className='btn btn-primary' onClick={() => {
                                         if (productId) {
-                                            deleteWishlistItem(productId.split('&')[1]);
+                                            deleteWishlistItem(productId.split('-').pop());
                                         }
                                     }}>
                                         <IoMdHeartDislike />
