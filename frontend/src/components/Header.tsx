@@ -39,7 +39,7 @@ const Header = () => {
                             </div>
                         </NavLink>
                         <div className="dropdown dropdown-end ml-2">
-                            <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar online placeholder">
+                            <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar placeholder">
                                 <div className="bg-neutral text-neutral-content w-10 rounded-full">
                                     <span className="text-lg">{user?.username.toUpperCase().slice(0, 1)}</span>
                                 </div>

@@ -30,12 +30,23 @@ module.exports.saveProduct = async (req, res, next) => {
 
 module.exports.getProducts = async (req, res, next) => {
     try {
-        const products = await ProductModel.find();
-        return res.json(products);
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 9;
+        const skip = (page - 1) * limit;
+
+        const products = await ProductModel.find().skip(skip).limit(limit);
+        const totalProducts = await ProductModel.countDocuments();
+
+        return res.json({
+            products: products,
+            totalPages: Math.ceil(totalProducts / limit),
+            currentPage: page,
+        });
     } catch (error) {
         next(error);
     }
-}
+};
+
 
 module.exports.getProductById = async (req, res, next) => {
     const { id } = req.params;

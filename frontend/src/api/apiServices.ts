@@ -36,8 +36,8 @@ export const userDetailsService = async (token: string) => {
     });
 }
 
-export const productsService = async () => {
-    return await fetch(PRODUCTS_URL, {
+export const productsService = async (currentPage: number, limit: number) => {
+    return await fetch(`${PRODUCTS_URL}?page=${currentPage}&limit=${limit}`, {
         method: 'GET',
     });
 }

@@ -6,7 +6,7 @@ module.exports.generateToken = (user) => {
         id: user._id,
         email: user.email,
     }
-    return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
+    return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1d' });
 }
 
 module.exports.authenticateToken = (req, res, next) => {
