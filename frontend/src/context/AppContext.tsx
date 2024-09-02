@@ -21,6 +21,7 @@ interface AppContextType {
     isInCart: (productId: string | undefined) => boolean;
     isInWishlist: (productId: string | undefined) => boolean;
     cartTotal: number;
+    updateCartTotal: (productId: string, operation: 'sum' | 'sub') => void;
 }
 
 const defaultContext: AppContextType = {
@@ -28,25 +29,20 @@ const defaultContext: AppContextType = {
     isAuthenticated: false,
     isAuthLoading: false,
     token: "",
-    login: () => {
-    },
-    logout: () => {
-    },
-    addCartItem: () => {
-    },
-    deleteCartItem: () => {
-    },
-    addWishlistItem: () => {
-    },
-    deleteWishlistItem: () => {
-    },
+    login: () => {},
+    logout: () => {},
+    addCartItem: () => {},
+    deleteCartItem: () => {},
+    addWishlistItem: () => {},
+    deleteWishlistItem: () => {},
     isInCart: () => {
         return false;
     },
     isInWishlist: () => {
         return false;
     },
-    cartTotal: 0
+    cartTotal: 0,
+    updateCartTotal: () => {}
 };
 
 const AppContext = createContext(defaultContext);
@@ -198,12 +194,25 @@ export const AppContextProvider: React.FC<AppProviderProps> = ({children}) => {
         return user?.wishlist.some((item) => item._id === productId);
     }
 
+    const updateCartTotal = (productId: string, operation: 'sum' | 'sub') => {
+        const itemIndex = user?.cart.findIndex((item) => item._id === productId);
+        if (itemIndex !== -1) {
+            const item = user?.cart[itemIndex];
+
+            // Determine the quantity difference
+            const quantityChange = operation === 'sum' ? 1 : -1;
+
+            // Update the cart total based on the operation
+            setCartTotal(cartTotal + item?.newPrice * quantityChange);
+        }
+    };
+
     return (
         <AppContext.Provider
             value={{
                 user,
                 isAuthenticated,
-                isAuthLoading,  // Expose loading state
+                isAuthLoading,
                 token,
                 login,
                 logout,
@@ -213,7 +222,8 @@ export const AppContextProvider: React.FC<AppProviderProps> = ({children}) => {
                 deleteWishlistItem,
                 isInCart,
                 isInWishlist,
-                cartTotal
+                cartTotal,
+                updateCartTotal
             }}
         >
             {children}

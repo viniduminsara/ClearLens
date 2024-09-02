@@ -11,7 +11,7 @@ interface CartItemCardProps{
 
 const CartItemCard = ({ data }: CartItemCardProps) => {
     const [qty, setQty] = useState(1);
-    const {user, addWishlistItem, deleteCartItem, deleteWishlistItem, isInWishlist} = useApp();
+    const {user, addWishlistItem, deleteCartItem, deleteWishlistItem, isInWishlist, updateCartTotal} = useApp();
 
     const [isWishlistItem, setIsWishlistItem] = useState(false);
 
@@ -34,6 +34,7 @@ const CartItemCard = ({ data }: CartItemCardProps) => {
                             <div className='flex my-3'>
                                 <button onClick={() => {
                                     if (qty > 1) {
+                                        updateCartTotal(data._id, "sub");
                                         setQty(qty - 1);
                                     }
                                 }}
@@ -46,6 +47,7 @@ const CartItemCard = ({ data }: CartItemCardProps) => {
                                 </span>
                                 <button onClick={() => {
                                     if (qty >= 1) {
+                                        updateCartTotal(data._id, "sum");
                                         setQty(qty + 1);
                                     }
                                 }}
